@@ -1,0 +1,24 @@
+
+        <div class="profile-card">
+            <div class="avatar-name">
+                <img [src]="profile.avatarUrl|img" width="70px"  alt="avatar" class="profile-card__avatar">
+                <div class="profile-card__name">
+                    <strong class="h6">{{profile.firstName}}</strong>
+                    <span class="subtitle">{{profile.username}}</span>
+                </div>
+                
+            </div>
+            <div class="profile-card__description">
+                {{profile.description}}
+            </div>
+            <div class="profile-card__tags">
+                <div class="skill-tag" *ngFor="let tag of profile.stack">{{tag}}</div>   
+            </div>
+            <div class="profile-card__btns">
+                <div class="btn-transparent btn-w44">J</div>
+                <div class="btn-primary">JKBJBKJN</div>
+                <div class="btn-primary btn-w44">J</div>
+            </div>
+            
+        </div>
+ 
