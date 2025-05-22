@@ -6,6 +6,6 @@ export const CurrentUserActions = createActionGroup({
   events: {
     'get Me': emptyProps(),
     'get Me Success': props<{ me: Profile }>(),
-    'get Me Failere': emptyProps(),
+    'get Me Failure': emptyProps(),
   },
 });
