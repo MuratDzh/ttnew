@@ -31,8 +31,8 @@ export class AvatarUploadComponent {
   _profileImg$: Observable<string | null> | undefined = undefined;
 
   @Input()
-  set profile$(p: Observable<Profile> | undefined) {
-    this._profileImg$ = p?.pipe(map((v) => v.avatarUrl));
+  set profile$(p: Observable<Profile|null>) {
+    this._profileImg$ = p?.pipe(map((v) => v?v.avatarUrl:''));
   }
 
   get profileImg$(): Observable<string | null> | undefined {

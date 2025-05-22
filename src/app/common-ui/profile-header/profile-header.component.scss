@@ -10,9 +10,12 @@
     display: flex;
     align-items: center;
     column-gap: 8px;
+    padding-inline: 20px;
 }
 
 .btn-wrapper{
+  display: flex;
+  gap: 16px;
     padding: 24px;
 }
 

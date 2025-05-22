@@ -19,7 +19,7 @@ const loginFeature = createFeature({
       ...state,
       tokens: action.response,
     })),
-    on(loginActions.loginFailere, (state, action) => ({
+    on(loginActions.loginFailure, (state, action) => ({
       ...state,
       backendErrors: action.errors,
     })),

@@ -1,5 +1,5 @@
 
-    
+
         <img class="mb20 logo" width="61px" height="74px" src="./../../../assets/svg/Logo-Tik-Talk.png" alt="logo">
         <nav class="mb20 mine-menu">
             <ul class="mine-menu_list">
@@ -11,26 +11,28 @@
                         <span>{{item.lebel}}</span>
                     </a>
                 </li>
-            
+
             </ul>
         </nav>
-        <p class="medium-text p-i mb20">Подписчики</p>
-    
+        <p class="medium-text p-i mb20">Подписки</p>
 
-    @for (sub of subscribers$|async; track sub.id) {
-        
-            <app-subscriber-card [subscriber]="sub"></app-subscriber-card>
-        
+    @for (sub of ((subscriptions$|async)|subscribersSlice:50); track sub.id) {
+      <a style="text-decoration: none; cursor: pointer;"
+         [routerLink]='["/profile", sub.id]' class="subscription">
+        <app-subscriber-card [subscriber]="sub"></app-subscriber-card>
+      </a>
+
+
     }
 
     <a [routerLink]="'/subscribers'" class="to-subscribers medium-text p-i">
-        <p class="medium-text">Все подписчики</p>
+        <p class="medium-text">Все подписки</p>
         <svg [appSvgDir]="'arrow'" viewBox="0 0 6 9" width="6" height="9">
             <use></use>
         </svg>
     </a>
-    
-    
+
+
     <div class="to-my-settings">
         <a [routerLink]="'settings'" routerLinkActive="active" class="to-my-settings-link">
             <img [src]="(me?me.avatarUrl:'')|img" [alt]="me?.username" class="to-my-settings-img">

@@ -1,30 +1,39 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
 import { SvgDirective } from '../../../helpers/directives/svg.directive';
-import { ProfileService } from '../../../data/services/profile.service';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import {
+  debounceTime,
+  distinctUntilChanged,
   exhaustMap,
   map,
-  Observable,
+  Observable, of,
   skip,
   startWith,
+  Subscription,
   switchMap,
   tap,
 } from 'rxjs';
 import { Subscribers } from '../../../data/interfces/subscribers.interfase';
 import { Profile } from '../../../data/interfces/profile.interface';
 import { CommonModule } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { FilterAccountsActions } from './FilterAccountsStore/filter-accounts.actions';
+import {
+  selectFilteredAccounts,
+  selectSearchFormValue
+} from "./FilterAccountsStore/filter-accounts.reducer";
+import {selectAccounts} from "../AccountsStore/accounts.reducer";
 
 export interface SearchForm {
-  firstName: string;
-  lastName: string;
+  firstName: string|null;
+  lastName: string|null;
   city: string | null;
-  stack: string;
+  stack: string|null;
 }
 
 @Component({
@@ -35,15 +44,17 @@ export interface SearchForm {
   styleUrl: './profile-filter.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProfileFilterComponent implements OnInit {
-  accounts$!: Observable<Profile[]>;
+export class ProfileFilterComponent implements OnInit, OnDestroy {
+  accounts$!: Observable<Profile[]|null>
+    searchFormValue!: Partial<SearchForm>|null;
 
   ac!: Subscribers<Profile>;
+  subscription!:Subscription
 
   constructor(
-    private ps: ProfileService,
+
+    private store: Store,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef
   ) {}
 
   form = this.fb.group<SearchForm>({
@@ -53,41 +64,31 @@ export class ProfileFilterComponent implements OnInit {
     stack: '',
   });
 
-  ngOnInit(): void {
-    this.accounts$ = this.form.valueChanges
-      .pipe(
-        skip(1),
-        tap((v) => this.cdr.markForCheck()),
-        switchMap((v) => {
-          console.log(v);
 
-          return this.ps.getAccounts(v);
-        })
-      )
-      .pipe(
-        map((v) => {
-          return v.items;
-        })
-      );
-    //  this.accounts$ = this.form.valueChanges
-    //    .pipe(
-    //      skip(1),
-    //      startWith(() => {
-    //        this.accounts$ = this.ps.getAccounts({}).pipe(map((v) => v.items));
-    //        this.cdr.markForCheck();
-    //      }),
-    //      switchMap((v) => {
-    //        console.log(v);
-    //        return this.ps.getAccounts(v)
-    //      })
-    //    )
-    //    .pipe(
-    //      map((v) => {
-    //        return v.items;
-    //      }),
 
-    //    );
+  ngOnInit() {
+    this.store.select(selectSearchFormValue).subscribe(v=>this.searchFormValue=v)
+    if(this.searchFormValue){
+
+      this.form.patchValue(this.searchFormValue)
+    }
+
+
+
+
+    this.subscription = this.form.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(
+      v => this.store.dispatch(FilterAccountsActions.filterAccounts({ searchFormValue: v })))
+    this.accounts$ = this.form.valueChanges.pipe(switchMap(()=>{
+      return this.store.select(selectFilteredAccounts).pipe(map((v)=>{
+        return v?v.items:null
+      }));}))
+
   }
-
-  toSearch() {}
+  toSearch() { }
+  
+  ngOnDestroy(): void {
+      this.subscription.unsubscribe()
+  }
 }

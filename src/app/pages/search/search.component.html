@@ -1,17 +1,28 @@
-<app-profile-filter #q class="mb20"></app-profile-filter>
-@if ((q.accounts$|async); as profiles) {
+<app-profile-filter #appProfileFilter class="mb20"></app-profile-filter>
+
+@if(!(isAccLoaded$|async)){
+    <p>...loading</p>
+}
+
+@if ((appProfileFilter.accounts$|async); as profiles) {
 
 
     @for (profile of profiles; track profile) {
-        
-        <app-profile-card [profile]="profile"></app-profile-card>
-    
+
+        <app-profile-card (toSubscribe)="onSubscribe(profile)"
+                          (toSendMessage)="onSendMessage(profile)"
+                          (toUnsubscribe)="onUnsubscribe(profile)"
+                          [profile]="profile"></app-profile-card>
+
     }
 
 } @else {
     @for (profile of acc$|async; track profile) {
-    
-    <app-profile-card [profile]="profile"></app-profile-card>
+
+    <app-profile-card (toSubscribe)="onSubscribe(profile)"
+                      (toSendMessage)="onSendMessage(profile)"
+                      (toUnsubscribe)="onUnsubscribe(profile)"
+                      [profile]="profile"></app-profile-card>
     }
 }
 

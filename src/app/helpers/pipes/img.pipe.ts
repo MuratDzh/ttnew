@@ -1,18 +1,16 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ProfileService } from '../../data/services/profile.service';
+
+import { environment } from '../../../environments/environment';
 
 @Pipe({
   name: 'img',
-  standalone: true
+  standalone: true,
 })
 export class ImgPipe implements PipeTransform {
-
-  constructor(private service: ProfileService){}
-
-  transform(value: string | null): string|null {
+  transform(value: string | null): string | null {
+    
     if (value === null) return null;
-   const url=this.service.url+value
+    const url = environment.url + value;
     return url;
   }
-
 }

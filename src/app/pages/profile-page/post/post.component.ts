@@ -41,7 +41,7 @@ export class PostComponent implements OnChanges {
   upComRes?: CommentsRes;
 
   @Input()
-  me!: number;
+  me: number|null=null;
 
   @Output()
   delCom = new EventEmitter();

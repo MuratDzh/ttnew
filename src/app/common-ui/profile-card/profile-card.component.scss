@@ -17,6 +17,12 @@
         overflow: hidden;
     }
 
+  .subscribe_btn{
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
     .avatar-name{
         display: flex;
         column-gap: 20px;
@@ -39,7 +45,36 @@
 
     &__btns{
         display: flex;
-        
+
         column-gap: 6px;
     }
+}
+
+.svg-btn{
+  padding: 14px;
+  background-color: transparent;
+  border: var(--border-primary);
+  color: var(--primary-color);
+  border-radius: var(--border-radius);
+
+
+  &:hover {
+    border-color: var(--primary-color-hover);
+    box-shadow: 0px 0px 10px -1px var(--primary-color) ;
+    //background-color: var(--link-active-bg-color);
+    border-color: var(--primary-color);
+  }
+}
+
+.unsubscribe{
+  padding: 14px;
+  background-color: transparent;
+  border: var(--border-primary-red);
+  color: var(--red-primary);
+  border-radius: var(--border-radius);
+  &:hover{
+    color: var(--red-primary);
+    box-shadow: 0px 0px 10px -1px var(--red-primary) ;
+    border-color: var(--red-primary);
+  }
 }

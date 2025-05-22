@@ -12,7 +12,7 @@ import { PostFormValue } from '../post-feed/post-feed.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PostRes } from '../../../data/interfces/post.interface.ts';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 @Component({
   selector: 'app-post-input',
@@ -24,7 +24,8 @@ import { Observable } from 'rxjs';
 })
 export class PostInputComponent implements OnChanges {
   @Input()
-  updatedPost?: PostRes | undefined;
+  updatedPost!: PostRes | null;
+
 
   @Output()
   post = new EventEmitter<PostFormValue>();
@@ -37,11 +38,15 @@ export class PostInputComponent implements OnChanges {
   constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    setTimeout(() => {
-      this.form.patchValue(this.updatedPost as PostRes);
+    // setTimeout(() => {
+    //   this.form.patchValue(this.updatedPost as PostRes);
 
-      this.cdr.markForCheck();
-    }, 0);
+    //   this.cdr.markForCheck();
+    // }, 0);
+    this.form.patchValue(this.updatedPost as PostRes);
+    this.cdr.detectChanges()
+    console.log('changes', changes);
+    
   }
 
   createPost() {

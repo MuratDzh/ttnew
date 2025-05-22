@@ -18,6 +18,7 @@ export interface PostRes {
   updatedAt: string;
   likes: number;
   comments: CommentsRes[];
+  isUpdate?:boolean
 }
 
 export interface CommentUpdate {
@@ -45,4 +46,10 @@ export interface CommentsRes {
   commentId: number,
   createdAt: string,
   updatedAt: string
+  post_id?: number
 }
+
+export interface CommentsResFull extends CommentsRes{
+  comments?: CommentsRes[]
+}
+

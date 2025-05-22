@@ -10,6 +10,8 @@
 
 }
 
+
+
 .about-title{
     display: flex;
     align-items: center;
@@ -17,7 +19,7 @@
     column-gap: 16px;
 
     .h6{
-        
+
         text-align: left;
     }
 }
@@ -26,6 +28,8 @@
     font-weight: 700;
     line-height: 16px;
     padding: 2px 6px;
+  color: var(--dark-color);
+  border-radius: var(--border-radius);
     background-color: rgb(152, 233, 171);
     border: none;
 }
@@ -38,6 +42,10 @@
         width: 36px;
         height: 36px;
         border-radius: 50%;
+
+        &:hover::after{
+            content: attr(data-title);
+        }
     }
 
     .sub-btn{

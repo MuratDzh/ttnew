@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   CommentInt,
-  CommentsRes,
+  CommentsRes, CommentsResFull,
   CommentUpdate,
   Post,
   PostRes,
 } from '../interfces/post.interface.ts.js';
 import { BehaviorSubject, map, Observable, switchMap, tap } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root',
@@ -21,18 +22,23 @@ export class PostService {
   constructor(private http: HttpClient) {}
 
   createPost(post: Post) {
-    return this.http.post<PostRes>(`${this.url}post/`, post).pipe(
-      switchMap(({ author }) => {
-        return this.getPosts(author.id);
-      })
-    );
+    return this.http
+      .post<PostRes>(`${this.url}post/`, post)
+      .pipe(tap((v) => console.log('CREATE POST SERVICE', v)));
   }
+  // createPost(post: Post) {
+  //   return this.http.post<PostRes>(`${this.url}post/`, post).pipe(
+  //     switchMap(({ author }) => {
+  //       return this.getPosts(author.id);
+  //     })
+  //   );
+  // }
 
-  getPosts(id: number) {
+  getPosts(id: number | string) {
     return this.http
       .get<PostRes[]>(`${this.url}post/`, { params: { user_id: id } })
       .pipe(
-        tap((v) => console.log(v)),
+        tap((v) => console.log('GET POSTS', 'ID: ', id, 'POSTS: ', v)),
         tap((v) => this._posts$.next(v))
       );
   }
@@ -42,32 +48,35 @@ export class PostService {
   }
 
   updatePost(post: Post, postId: number) {
-    return this.http
-      .patch(`${this.url}post/${postId}`, {
-        title: post.title,
-        content: post.content,
-      })
-      .pipe(
-        switchMap(() => {
-          return this.getPosts(post.authorId);
-        })
-      );
+    return this.http.patch<PostRes>(`${this.url}post/${postId}`, {
+      title: post.title,
+      content: post.content,
+    });
   }
-  // updatePost(post: Post, postId:number) {
-  //   return this.getPostById(postId).pipe(
-  //     switchMap(() => {
-  //       return this.getPosts(post.authorId);
+
+  // updatePost(post: Post, postId: number) {
+  //   return this.http
+  //     .patch(`${this.url}post/${postId}`, {
+  //       title: post.title,
+  //       content: post.content,
   //     })
-  //   );
+  //     .pipe(
+  //       switchMap(() => {
+  //         return this.getPosts(post.authorId);
+  //       })
+  //     );
   // }
 
   delPost(post: PostRes) {
-    return this.http.delete<PostRes>(`${this.url}post/${post.id}`).pipe(
-      switchMap(() => {
-        return this.getPosts(post.author.id);
-      })
-    );
+    return this.http.delete<PostRes>(`${this.url}post/${post.id}`);
   }
+  // delPost(post: PostRes) {
+  //   return this.http.delete<PostRes>(`${this.url}post/${post.id}`).pipe(
+  //     switchMap(() => {
+  //       return this.getPosts(post.author.id);
+  //     })
+  //   );
+  // }
 
   createComment(e: CommentInt) {
     return this.http
@@ -83,6 +92,17 @@ export class PostService {
           return this.getPosts(e.authorId);
         })
       );
+  }
+
+  createCommentAction(e: CommentInt) {
+    return this.http
+      .post<CommentsRes>(`${this.url}comment/`, {
+        text: e.text,
+        authorId: e.authorId,
+        postId: e.postId,
+        commentId: 0,
+      })
+
   }
 
   delComment(i: number, postId: number, authorId: number) {
@@ -101,6 +121,16 @@ export class PostService {
     );
   }
 
+  delCommentAction(comment: CommentsRes) {
+
+        return this.http.delete(`${this.url}comment/${comment.id}`)
+
+  }
+
+  getCommentById(id: number|string) {
+    return this.http.get(`${this.url}comment/${id}`)
+  }
+
   getComment(i: number, postId: number) {
     return this.getPostById(postId).pipe(
       map((v) => {
@@ -109,15 +139,24 @@ export class PostService {
     );
   }
 
-  updateComment(e: Partial<CommentInt>) {
+  updateCommentAction(e: Partial<CommentInt>) {
     return this.http
       .patch(`${this.url}comment/${e.commentId}`, {
         text: e.text,
       })
-      .pipe(
-        switchMap(() => {
-          return this.getPosts(e.authorId as number);
-        })
-      );
+
   }
+
+
+    // updateComment(e: Partial<CommentInt>) {
+  //   return this.http
+  //     .patch(`${this.url}comment/${e.commentId}`, {
+  //       text: e.text,
+  //     })
+  //     .pipe(
+  //       switchMap(() => {
+  //         return this.getPosts(e.authorId as number);
+  //       })
+  //     );
+  // }
 }

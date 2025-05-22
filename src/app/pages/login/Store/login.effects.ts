@@ -21,7 +21,7 @@ export const loginEffects = createEffect(
               return loginActions.loginSuccess({ response });
             }),
             catchError((err: HttpErrorResponse) => {
-              return of(loginActions.loginFailere({ errors: err.error }));
+              return of(loginActions.loginFailure({ errors: err.error }));
             })
           );
       })

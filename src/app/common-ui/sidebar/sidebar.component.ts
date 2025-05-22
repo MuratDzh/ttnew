@@ -10,8 +10,17 @@ import { CommonModule } from '@angular/common';
 import { SubscriberCardComponent } from '../subscriber-card/subscriber-card.component';
 import { ProfileService } from '../../data/services/profile.service';
 import { Profile } from '../../data/interfces/profile.interface';
-import { Observable, Subscription } from 'rxjs';
+import { map, Observable, of, Subscription } from 'rxjs';
 import { ImgPipe } from '../../helpers/pipes/img.pipe';
+import { select, Store } from '@ngrx/store';
+import { selectMe } from '../../data/currentUserStore/current-user.reducer';
+import { selectSubscribers } from '../../data/subscribersStore/subscribers.reducer';
+import { Subscribers } from '../../data/interfces/subscribers.interfase';
+import { SlicePipe } from '../../helpers/pipes/slice.pipe';
+import {
+
+  selectSubscriptionsState
+} from "../../data/subscriptionsStore/subscriptions.reducer";
 
 @Component({
   selector: 'app-sidebar',
@@ -23,13 +32,14 @@ import { ImgPipe } from '../../helpers/pipes/img.pipe';
     RouterLinkActive,
     SubscriberCardComponent,
     ImgPipe,
+    SlicePipe,
   ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarComponent implements OnInit, OnDestroy {
-  me?: Profile;
+  me: Profile | null = null;
 
   meSubscription?: Subscription;
   menuItems = [
@@ -50,13 +60,32 @@ export class SidebarComponent implements OnInit, OnDestroy {
     },
   ];
 
-  subscribers$?: Observable<Profile[]>;
+  subscribers$!: Observable<Profile[] | null>;
+  subscriptions$!: Observable<Profile[] | null>;
+  subscriptionsTotal$!: Observable<number>
 
-  constructor(private service: ProfileService) {}
+
+  constructor(private store: Store) {}
 
   ngOnInit(): void {
-    this.subscribers$ = this.service.getSubscribersShortList(3);
-    this.meSubscription = this.service.getMe().subscribe((v) => (this.me = v));
+    // this.subscribers$ = this.store.pipe(
+    //   select(selectSubscribers),
+    //   map((sub) => (sub ? sub. : null))
+    // );
+
+     this.subscriptions$= this.store.select(selectSubscriptionsState).pipe(
+      map(v=>v.items)
+    )
+
+    this.subscriptionsTotal$ = this.store.select(selectSubscriptionsState).pipe(
+
+      map(v=>v.total)
+    )
+
+    // this.meSubscription = this.service.getMe().subscribe((v) => (this.me = v));
+    this.meSubscription = this.store
+      .select(selectMe)
+      .subscribe((v) => (this.me = v));
   }
 
   ngOnDestroy(): void {

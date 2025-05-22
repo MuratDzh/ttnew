@@ -7,6 +7,6 @@ export const loginActions = createActionGroup({
   events: {
     Login: props<{ request: FormLoginValue }>(),
     'Login success': props<{ response: Auth }>(),
-    'Login failere': props<{ errors: BackendErrorsInterface }>(),
+    'Login failure': props<{ errors: BackendErrorsInterface }>(),
   },
 });

@@ -32,6 +32,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { AvatarUploadComponent } from './avatar-upload.component';
+import { Store } from '@ngrx/store';
+import { selectMe } from '../../data/currentUserStore/current-user.reducer';
 
 @Component({
   selector: 'app-settings',
@@ -49,7 +51,7 @@ import { AvatarUploadComponent } from './avatar-upload.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent implements OnInit {
-  me$?: Observable<Profile>;
+  me$!: Observable<Profile|null>;
   me1 = signal<Partial<Profile>>({});
 
   @ViewChild(AvatarUploadComponent)
@@ -67,11 +69,12 @@ export class SettingsComponent implements OnInit {
     private profService: ProfileService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private store:Store
   ) {}
 
   ngOnInit(): void {
-    this.me$ = this.profService.getMe();
+    this.me$ = this.store.select(selectMe)
 
     this.me$
       .pipe(

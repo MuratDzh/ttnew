@@ -10,7 +10,7 @@
     .logo{
         margin-left: 16px;
     }
-    
+
 
 
     .to-subscribers{
@@ -34,7 +34,7 @@
     p.medium-text.p-i{
         color: var(--light-grey-transparent);
 
-        
+
     }
 
     .mine-menu{
@@ -44,7 +44,7 @@
         }
 
         &_item{
-           
+
             font-size: 14px;
             font-weight: 700;
             line-height: 24px;
@@ -73,7 +73,7 @@
 
             &:hover{
                 cursor: pointer;
-                
+
             }
         }
     }
@@ -82,7 +82,7 @@
         width: calc(300px - 2*12px);
         position: fixed;
         bottom: 20px;
-        
+
 
          .active {
                 background-color: var(--link-active-bg-color);
@@ -90,7 +90,7 @@
                 color: var(--primary-color-hover);
                 cursor: auto;
             }
-        
+
         &-link{
             display: grid;
             grid-template-columns: 32px 1fr 16px;
@@ -119,5 +119,8 @@
                 }
     }
 
-        
+a.subscription{
+  text-decoration: none;
+  color: var(--light-color);
+}
 
