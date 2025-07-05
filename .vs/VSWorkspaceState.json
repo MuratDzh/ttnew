@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\libs",
+    "\\libs\\chat",
+    "\\libs\\chat\\src",
+    "\\libs\\chat\\src\\lib",
+    "\\libs\\chat\\src\\lib\\data",
+    "\\libs\\shared\\src",
+    "\\libs\\shared\\src\\lib",
+    "\\libs\\shared\\src\\lib\\data",
+    "\\libs\\shared\\src\\lib\\data\\environments"
+  ],
+  "SelectedNode": "\\libs\\chat\\src\\lib\\data\\resolvers",
+  "PreviewInSolutionExplorer": false
+}
